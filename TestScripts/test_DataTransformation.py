@@ -18,7 +18,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-@pytest.mark.usefixtures("print_message")
+@pytest.mark.usefixtures("print_message as fixture")
 class TestDataTransformation:
 
     def test_DT_Filter_check(self,connect_to_mysql_database):
