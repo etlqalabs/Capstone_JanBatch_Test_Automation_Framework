@@ -49,7 +49,7 @@ def verify_expected_as_db_to_actual_as_db_ext(db_engine1,table_name1,db_engine2,
 
 # this fucntion will accept a query  directly
 def verify_expected_as_db_to_actual_as_db(db_engine_expected,query_expected,db_engine_actual,query_actual):
-    df_expected = pd.read_sql(db_engine_expected, db_engine_expected)
+    df_expected = pd.read_sql(query_expected, db_engine_expected)
     logger.info(f"The expected data is the database is: {df_expected}")
     df_actual = pd.read_sql(query_actual, db_engine_actual)
     logger.info(f"The actual data is the database is: {df_actual}")

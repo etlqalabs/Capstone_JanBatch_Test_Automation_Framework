@@ -5,8 +5,7 @@ from sqlalchemy import create_engine
 import cx_Oracle
 import logging
 
-from CommonUtilities.utils import verify_expected_as_file_to_actual_as_db, verify_expected_as_db_to_actual_as_db, \
-    verify_expected_as_db_to_actual_as_db_ext
+from CommonUtilities.utils import verify_expected_as_file_to_actual_as_db, verify_expected_as_db_to_actual_as_db
 from Configuration.config import *
 
 logging.basicConfig(
