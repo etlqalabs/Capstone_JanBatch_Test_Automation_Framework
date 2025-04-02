@@ -5,7 +5,8 @@ from sqlalchemy import create_engine
 import cx_Oracle
 import logging
 
-from CommonUtilities.utils import verify_expected_as_file_to_actual_as_db, verify_expected_as_db_to_actual_as_db
+from CommonUtilities.utils import verify_expected_as_file_to_actual_as_db, verify_expected_as_db_to_actual_as_db, \
+    getDataFromLinuxBox
 from Configuration.config import *
 
 logging.basicConfig(
@@ -16,7 +17,7 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-@pytest.mark.usefixtures("print_message")
+
 class TestDataExtraction:
 
     '''
@@ -34,15 +35,18 @@ class TestDataExtraction:
             pytest.fail("Test case executin for sales_data extraction has failed")
       '''
 
+    @pytest.mark.regression
     def test_DE_from_sales_data_to_staging(self, connect_to_mysql_database):
         try:
             logger.info("Test case executin for sales_data extraction has started..")
-            verify_expected_as_file_to_actual_as_db("TestData/sales_data_Linux.csv","csv",connect_to_mysql_database,"staging_sales")
+            getDataFromLinuxBox()
+            verify_expected_as_file_to_actual_as_db("TestData/sales_data_Linux_remote.csv","csv",connect_to_mysql_database,"staging_sales")
             logger.info("Test case executin for sales_data extraction has completed..")
         except Exception as e:
             logger.error(f"Test case executin for sales_data extraction has failed{e}")
             pytest.fail("Test case executin for sales_data extraction has failed")
 
+    @pytest.mark.regression
     def test_DE_from_product_data_to_staging(self, connect_to_mysql_database):
         try:
             logger.info("Test case executin for product_data extraction has started..")
@@ -52,6 +56,8 @@ class TestDataExtraction:
             logger.error(f"Test case executin for product_data extraction has failed{e}")
             pytest.fail("Test case executin for product_data extraction has failed")
 
+    @pytest.mark.regression
+    @pytest.mark.smoke
     def test_DE_from_supplier_data_to_staging(self, connect_to_mysql_database):
         try:
             logger.info("Test case executin for supplier_data extraction has started..")

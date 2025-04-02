@@ -33,12 +33,3 @@ def connect_to_mysql_database():
     yield mysql_engine
     mysql_engine.close()
     logger.info("mysql conenction is closed established...")
-
-@pytest.fixture()
-def print_message():
-    logger.info("Before test print..")
-    yield
-    logger.info("after test print..")
-
-
-
