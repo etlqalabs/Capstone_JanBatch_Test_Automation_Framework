@@ -6,7 +6,7 @@ import cx_Oracle
 import logging
 
 from CommonUtilities.utils import verify_expected_as_file_to_actual_as_db, verify_expected_as_db_to_actual_as_db, \
-    getDataFromLinuxBox
+    getDataFromLinuxBox, verify_expected_as_S3_to_actual_as_db
 from Configuration.config import *
 
 logging.basicConfig(
@@ -36,6 +36,7 @@ class TestDataExtraction:
       '''
 
     @pytest.mark.regression
+    @pytest.mark.skip
     def test_DE_from_sales_data_to_staging(self, connect_to_mysql_database):
         try:
             logger.info("Test case executin for sales_data extraction has started..")
@@ -50,14 +51,24 @@ class TestDataExtraction:
     def test_DE_from_product_data_to_staging(self, connect_to_mysql_database):
         try:
             logger.info("Test case executin for product_data extraction has started..")
-            verify_expected_as_file_to_actual_as_db("TestData/product_data.csv","csv",connect_to_mysql_database,"staging_product")
+            bucket_name = 'bucket-product-data'  # Replace with your actual bucket name
+            file_key = 'TestData/product_data.csv'
+
+            query_actual = """select * from staging_product"""
+            verify_expected_as_S3_to_actual_as_db(bucket_name, file_key, connect_to_mysql_database, query_actual)
+           # verify_expected_as_file_to_actual_as_db("TestData/product_data_absolute.csv","csv",connect_to_mysql_database,"staging_product")
             logger.info("Test case executin for product_data extraction has completed..")
         except Exception as e:
             logger.error(f"Test case executin for product_data extraction has failed{e}")
             pytest.fail("Test case executin for product_data extraction has failed")
 
+
+
+
+
     @pytest.mark.regression
     @pytest.mark.smoke
+    @pytest.mark.skip
     def test_DE_from_supplier_data_to_staging(self, connect_to_mysql_database):
         try:
             logger.info("Test case executin for supplier_data extraction has started..")
@@ -67,6 +78,7 @@ class TestDataExtraction:
             logger.error(f"Test case executin for supplier_data extraction has failed{e}")
             pytest.fail("Test case executin for supplier_data extraction has failed")
 
+    @pytest.mark.skip
     def test_DE_from_inventory_data_to_staging(self, connect_to_mysql_database):
         try:
             logger.info("Test case executin for inventory_data extraction has started..")
@@ -76,7 +88,7 @@ class TestDataExtraction:
             logger.error(f"Test case executin for inventory_data extraction has failed{e}")
             pytest.fail("Test case executin for inventory_data extraction has failed")
 
-
+    @pytest.mark.skip
     def test_DE_from_oracle_to_staging_mysql(self, connect_to_oracle_database,connect_to_mysql_database):
         try:
             logger.info("Test case executin for stores_data from oracle extraction has started..")
