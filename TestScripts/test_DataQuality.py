@@ -22,6 +22,7 @@ logger = logging.getLogger(__name__)
 class TestDataQuality:
     # Verify the DQ checks for sales_data.csv file
     @pytest.mark.smoke
+    @pytest.mark.DQ
     def test_DQ_Sales_data_file_availabilty(self):
         try:
             logger.info(f"File availabilty check for  initiated...")
@@ -33,6 +34,7 @@ class TestDataQuality:
 
     # Verify the DQ checks for sales_data.csv file
     @pytest.mark.smoke
+    @pytest.mark.DQ
     def test_DQ_sales_data_file_size(self):
         try:
             logger.info(f"File size check for  initiated...")
@@ -42,6 +44,7 @@ class TestDataQuality:
             logger.error("Error while checking the file size")
             pytest.fail("test for file size check is failed")
 
+    @pytest.mark.DQ
     @pytest.mark.smoke
     def test_DQ_Sales_data_duplication(self):
         try:
@@ -52,6 +55,7 @@ class TestDataQuality:
             logger.error("Error while reading the file ")
             pytest.fail("test for duplicate  check is failed")
 
+    @pytest.mark.DQ
     @pytest.mark.smoke
     def test_DQ_Supplier_data_duplication_for_sales_id_column(self):
         try:
@@ -62,6 +66,7 @@ class TestDataQuality:
             logger.error("Error while reading the file ")
             pytest.fail("test for duplicate  check for supplier_id is failed")
 
+    @pytest.mark.DQ
     @pytest.mark.smoke
     def test_DQ_Sales_data_missing_value_check(self):
         try:

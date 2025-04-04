@@ -179,3 +179,43 @@ def getDataFromLinuxBox():
         logger.info("The file from Linux is downlaoded to local")
     except Exception as e:
         logger.error(f"Error whilee connecting Linux {e}")
+
+
+#### New code ###########
+import boto3
+import pandas as pd
+from io import StringIO
+
+# Initialize a session using Boto3
+s3 = boto3.client('s3')
+
+# Read the file from S3 and return dataframe
+def read_csv_from_s3(bucket_name, file_key):
+    try:
+        # Fetch the CSV file from S3
+        response = s3.get_object(Bucket=bucket_name, Key=file_key)
+
+        # Read the content of the file and load it into a Pandas DataFrame
+        csv_content = response['Body'].read().decode('utf-8')  # Decode content to string
+        data = StringIO(csv_content)  # Use StringIO to simulate a file-like object
+
+        # Read the CSV data into a Pandas DataFrame
+        df = pd.read_csv(data)
+
+        # Return the DataFrame
+        return df
+    except Exception as e:
+        print(f"Error reading file from S3: {e}")
+        return None
+
+
+def verify_expected_as_S3_to_actual_as_db(db_engine_expected,query_expected,db_engine_actual,query_actual):
+    bucket_name = 'bucket-upload-file-from-local-s3'  # Replace with your actual bucket name
+    file_key = 'employeeData/emp_src.csv'
+    # The desired path and file name in the S3 bucket
+    # Call the function to read the CSV file from S3
+    df_expected = read_csv_from_s3(bucket_name, file_key)
+    logger.info(f"The expected data is the database is: {df_expected}")
+    df_actual = pd.read_sql(query_actual, db_engine_actual)
+    logger.info(f"The actual data is the database is: {df_actual}")
+    assert df_actual.equals(df_expected), f"expected data in {query_expected} does not match with expected data in{query_actual}"
